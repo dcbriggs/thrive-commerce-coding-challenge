@@ -25,5 +25,30 @@
   <%= @car.is_for_sale %>
 </p>
 
+<br/>
+
+<h2>Ownership History</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Purchaser</th>
+      <th>Date of Purchase</th>
+      <th>Price</th>
+      <th>Mileage when purchased</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ownership_history.each do |owner| %>
+      <tr>
+        <td><%= owner.person.name %></td>
+        <td><%= owner.date_of_sale %></td>
+        <td><%= number_to_currency(owner.price) %></td>
+        <td><%= owner.mileage_at_sale %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <%= link_to 'Edit', edit_car_path(@car) %> |
 <%= link_to 'Back', cars_path %>

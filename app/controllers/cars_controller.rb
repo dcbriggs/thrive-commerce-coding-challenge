@@ -8,6 +8,7 @@ class CarsController < ApplicationController
 
   # GET /cars/1 or /cars/1.json
   def show
+    @ownership_history = CarOwner.includes(:person).where(car_id: params[:id])
   end
 
   # GET /cars/new
@@ -49,6 +50,10 @@ class CarsController < ApplicationController
 
   # DELETE /cars/1 or /cars/1.json
   def destroy
+    # An alternative to this would be to instead add a 'deleted' field to the model, set that to
+    # true when this is called. Filter the show page to not show any deleted models, and the history 
+    # Can either still show the ownership records or ignore them
+    @car.car_owners.destroy_all
     @car.destroy
 
     respond_to do |format|

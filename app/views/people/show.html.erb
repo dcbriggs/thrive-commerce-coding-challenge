@@ -15,5 +15,32 @@
   <%= @person.telephone %>
 </p>
 
+<h2>Ownership History</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Car Make</th>
+      <th>Car Model</th>
+      <th>Date of Purchase</th>
+      <th>Price</th>
+      <th>Mileage when purchased</th>
+      <th>Current mileage</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ownership_history.each do |owner| %>
+      <tr>
+        <td><%= owner.car.make %></td>
+        <td><%= owner.car.model %></td>
+        <td><%= owner.date_of_sale %></td>
+        <td><%= number_to_currency(owner.price) %></td>
+        <td><%= owner.mileage_at_sale %></td>
+        <td><%= owner.car.mileage %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 <%= link_to 'Edit', edit_person_path(@person) %> |
 <%= link_to 'Back', people_path %>
