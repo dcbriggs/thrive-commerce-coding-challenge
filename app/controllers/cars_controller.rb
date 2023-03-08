@@ -8,7 +8,7 @@ class CarsController < ApplicationController
 
   # GET /cars/1 or /cars/1.json
   def show
-    @ownership_history = CarOwner.includes(:person).where(car_id: params[:id])
+    @ownership_history = CarOwner.includes(:person).where(car_id: params[:id]).order(:date_of_sale)
   end
 
   # GET /cars/new
