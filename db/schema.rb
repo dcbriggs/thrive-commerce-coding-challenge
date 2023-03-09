@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_08_222739) do
+ActiveRecord::Schema.define(version: 2023_03_08_232053) do
 
   create_table "car_owners", force: :cascade do |t|
     t.integer "car_id", null: false
@@ -32,6 +32,8 @@ ActiveRecord::Schema.define(version: 2023_03_08_222739) do
     t.boolean "is_for_sale"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "owner_id", null: false
+    t.index ["owner_id"], name: "index_cars_on_owner_id"
   end
 
   create_table "people", force: :cascade do |t|
@@ -44,4 +46,5 @@ ActiveRecord::Schema.define(version: 2023_03_08_222739) do
 
   add_foreign_key "car_owners", "cars"
   add_foreign_key "car_owners", "people"
+  add_foreign_key "cars", "people", column: "owner_id"
 end

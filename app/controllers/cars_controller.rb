@@ -3,12 +3,15 @@ class CarsController < ApplicationController
 
   # GET /cars or /cars.json
   def index
+    # Opted against showing the owner in the index page as it will be inefficient to get this to scale
+    # as the table grow. Could be done with a query that goes beyond when Rails provides out of the box
     @cars = Car.all
   end
 
   # GET /cars/1 or /cars/1.json
   def show
-    @ownership_history = CarOwner.includes(:person).where(car_id: params[:id]).order(:date_of_sale)
+    @owner = Person.find(@car.owner_id)
+    @ownership_history = CarOwner.includes(:person).where(car_id: @car.id).order(:date_of_sale)
   end
 
   # GET /cars/new
@@ -24,10 +27,20 @@ class CarsController < ApplicationController
   def create
     @car = Car.new(car_params)
 
+
     respond_to do |format|
       if @car.save
-        format.html { redirect_to car_url(@car), notice: "Car was successfully created." }
-        format.json { render :show, status: :created, location: @car }
+
+        ownership = CarOwner.new(car_id: @car.id, person_id: params[:car][:owner_id], price: params[:car][:price], mileage_at_sale: params[:car][:mileage], date_of_sale: Date.today)
+
+        if ownership.save
+          format.html { redirect_to car_url(@car), notice: "Car was successfully created." }
+          format.json { render :show, status: :created, location: @car }
+        else
+          @car.destroy
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: ownership.errors, status: :unprocessable_entity }
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @car.errors, status: :unprocessable_entity }
@@ -38,12 +51,30 @@ class CarsController < ApplicationController
   # PATCH/PUT /cars/1 or /cars/1.json
   def update
     respond_to do |format|
-      if @car.update(car_params)
-        format.html { redirect_to car_url(@car), notice: "Car was successfully updated." }
-        format.json { render :show, status: :ok, location: @car }
+      if params[:car][:owner_id] != @car.owner_id
+        ownership = CarOwner.new(car_id: @car.id, person_id: params[:car][:owner_id], price: params[:car][:price], mileage_at_sale: params[:car][:mileage], date_of_sale: Date.today)
+
+        if ownership.save
+          if @car.update(car_params)
+            format.html { redirect_to car_url(@car), notice: "Car was successfully updated." }
+            format.json { render :show, status: :ok, location: @car }
+          else
+            ownership.destroy
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @car.errors, status: :unprocessable_entity }
+          end
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: ownership.errors, status: :unprocessable_entity }
+        end
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @car.errors, status: :unprocessable_entity }
+        if @car.update(car_params)
+          format.html { redirect_to car_url(@car), notice: "Car was successfully updated." }
+          format.json { render :show, status: :ok, location: @car }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @car.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -70,6 +101,6 @@ class CarsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def car_params
-      params.require(:car).permit(:model, :make, :color, :mileage, :is_for_sale)
+      params.require(:car).permit(:model, :make, :color, :mileage, :is_for_sale, :owner_id)
     end
 end

@@ -18,12 +18,12 @@ ford = Person.create(name:'Henry Ford', email: 'henry@ford.com', telephone:'(555
 toyota = Person.create(name:'Kiichiro Toyoda', email: 'kiichiro@toyota.com', telephone:'(123) 456-7890')
 ferrari = Person.create(name:'Enzo Ferrari', email: 'enzo@ferrari.com', telephone:'(123) 123-4567')
 
-mustang = Car.create(make: 'Ford', model: 'Mustang', color: 'blue', mileage: 50000, is_for_sale: false)
-fusion = Car.create(make: 'Ford', model: 'Fusion', color: 'green', mileage: 75000, is_for_sale: false)
-corolla = Car.create(make: 'Toyota', model: 'Corolla', color: 'silver', mileage: 100000, is_for_sale: true)
-camry = Car.create(make: 'Toyota', model: 'Camry', color: 'black', mileage: 25000, is_for_sale: false)
-roma = Car.create(make: 'Ferrari', model: 'Roma', color: 'red', mileage: 5000, is_for_sale: false)
-california = Car.create(make: 'Ferrari', model: 'California', color: 'red', mileage: 10000, is_for_sale: false)
+mustang = Car.create(make: 'Ford', model: 'Mustang', color: 'blue', mileage: 50000, is_for_sale: false, owner: ford)
+fusion = Car.create(make: 'Ford', model: 'Fusion', color: 'green', mileage: 75000, is_for_sale: false, owner: ford)
+corolla = Car.create(make: 'Toyota', model: 'Corolla', color: 'silver', mileage: 100000, is_for_sale: true, owner: toyota)
+camry = Car.create(make: 'Toyota', model: 'Camry', color: 'black', mileage: 25000, is_for_sale: false, owner: toyota)
+roma = Car.create(make: 'Ferrari', model: 'Roma', color: 'red', mileage: 5000, is_for_sale: false, owner: ferrari)
+california = Car.create(make: 'Ferrari', model: 'California', color: 'red', mileage: 10000, is_for_sale: false, owner: ferrari)
 
 
 CarOwner.create( person: ford, car: mustang, mileage_at_sale: 0, price: 35000, date_of_sale: Date.new(2023, 1, 1))

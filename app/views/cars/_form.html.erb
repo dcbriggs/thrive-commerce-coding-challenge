@@ -32,9 +32,20 @@
   </div>
 
   <div class="field">
+    <%= form.label :price %>
+    <%= form.number_field :price %>
+  </div>
+
+  <div class="field">
     <%= form.label :is_for_sale %>
     <%= form.check_box :is_for_sale %>
   </div>
+
+  <div class="field">
+    <%= form.label :owner_id %>
+    <%= form.collection_select(:owner_id, Person.all, :id, :name) %>
+  </div>
+
 
   <div class="actions">
     <%= form.submit %>
